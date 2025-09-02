@@ -79,12 +79,10 @@ func (c *Client) sendGetRequest(ctx context.Context, u *url.URL) (*http.Response
 		panic("idToken is empty")
 	}
 	req.Header.Set("Authorization", "Bearer "+c.idToken)
-	slog.Debug("Sending HTTP GET request", slog.String("url", u.String()))
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
-	slog.Debug("HTTP GET response", slog.Int("status", resp.StatusCode), slog.String("url", u.String()))
 	return resp, nil
 }
 
