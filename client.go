@@ -7,10 +7,10 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"log/slog"
 	"net/http"
 	"net/url"
 	"os"
+	"time"
 )
 
 const baseURL = "https://api.jquants.com/v1"
@@ -22,6 +22,9 @@ type Client struct {
 	password     string
 	refreshToken string
 	idToken      string
+
+	retryInterval time.Duration
+	loopTimeout   time.Duration
 }
 
 func NewClient(ctx context.Context, httpClient *http.Client) (*Client, error) {
@@ -41,6 +44,9 @@ func NewClient(ctx context.Context, httpClient *http.Client) (*Client, error) {
 		baseURL:     baseURL,
 		mailAddress: email,
 		password:    password,
+
+		retryInterval: 5 * time.Second,
+		loopTimeout:   20 * time.Second,
 	}
 
 	refreshToken := os.Getenv("J_QUANTS_REFRESH_TOKEN")
