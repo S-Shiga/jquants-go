@@ -22,7 +22,7 @@ func TestClient_StockTradingValue(t *testing.T) {
 		t.Errorf("Failed to get stock trading value: %s", err)
 	}
 	if len(res) == 0 {
-		t.Errorf("Empty stock trading value")
+		t.Error("Empty stock trading value")
 	}
 }
 
@@ -40,7 +40,7 @@ func TestClient_MarginTradingVolume(t *testing.T) {
 		t.Errorf("Failed to get margin trading volume: %s", err)
 	}
 	if len(res) == 0 {
-		t.Errorf("Empty margin trading volume")
+		t.Error("Empty margin trading volume")
 	}
 }
 
