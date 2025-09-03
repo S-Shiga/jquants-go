@@ -92,6 +92,23 @@ func (c *Client) sendGetRequest(ctx context.Context, u *url.URL) (*http.Response
 	return resp, nil
 }
 
+type parameter interface {
+	values() (url.Values, error)
+}
+
+func (c *Client) sendRequest(ctx context.Context, urlPath string, param parameter) (*http.Response, error) {
+	u, err := url.Parse(c.baseURL + urlPath)
+	if err != nil {
+		panic(err)
+	}
+	v, err := param.values()
+	if err != nil {
+		panic(err)
+	}
+	u.RawQuery = v.Encode()
+	return c.sendGetRequest(ctx, u)
+}
+
 type BadRequest struct {
 	err error
 }
