@@ -412,8 +412,6 @@ func (c *Client) MarginTradingVolume(ctx context.Context, req MarginTradingVolum
 	return data, nil
 }
 
-// Outstanding Short Selling Positions Reported not implemented
-
 type ShortSellingValue struct {
 	Date                                         time.Time `json:"Date"`
 	Sector33Code                                 string    `json:"Sector33Code"`
@@ -530,4 +528,75 @@ func (c *Client) ShortSellingValue(ctx context.Context, req ShortSellingValueReq
 		}
 	}
 	return data, nil
+}
+
+// Outstanding Short Selling Positions Reported not implemented
+
+// Margin Trading Outstanding not implemented
+
+// Breakdown Trading not implemented
+
+type TradingCalendar struct {
+	Date            time.Time `json:"Date"`
+	HolidayDivision int8      `json:"HolidayDivision"`
+}
+
+func (tc *TradingCalendar) UnmarshalJSON(b []byte) error {
+	var raw struct {
+		Date            string `json:"Date"`
+		HolidayDivision string `json:"HolidayDivision"`
+	}
+	if err := json.Unmarshal(b, &raw); err != nil {
+		return fmt.Errorf("failed to decode holiday division error response: %w", err)
+	}
+	t, err := time.Parse(time.DateOnly, raw.Date)
+	if err != nil {
+		return fmt.Errorf("failed to decode holiday division error response: %w", err)
+	}
+	hd, err := strconv.ParseInt(raw.HolidayDivision, 10, 8)
+	if err != nil {
+		return fmt.Errorf("failed to decode holiday division error response: %w", err)
+	}
+	tc.Date = t
+	tc.HolidayDivision = int8(hd)
+	return nil
+}
+
+type TradingCalendarRequest struct {
+	HolidayDivision *int8
+	From            *time.Time
+	To              *time.Time
+}
+
+func (r TradingCalendarRequest) values() (url.Values, error) {
+	v := url.Values{}
+	if r.HolidayDivision != nil {
+		v.Add("holidaydivision", strconv.Itoa(int(*r.HolidayDivision)))
+	}
+	if r.From != nil {
+		v.Add("from", r.From.Format(time.DateOnly))
+	}
+	if r.To != nil {
+		v.Add("to", r.To.Format(time.DateOnly))
+	}
+	return v, nil
+}
+
+type tradingCalendarResponse struct {
+	TradingCalendar []TradingCalendar `json:"trading_calendar"`
+}
+
+func (c *Client) TradingCalendar(ctx context.Context, req TradingCalendarRequest) ([]TradingCalendar, error) {
+	var r tradingCalendarResponse
+	resp, err := c.sendRequest(ctx, "/markets/trading_calendar", req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to send GET request: %w", err)
+	}
+	if resp.StatusCode != 200 {
+		return nil, handleErrorResponse(resp)
+	}
+	if err = decodeResponse(resp, &r); err != nil {
+		return nil, fmt.Errorf("failed to decode HTTP Response: %w", err)
+	}
+	return r.TradingCalendar, nil
 }

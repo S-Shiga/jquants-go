@@ -61,3 +61,19 @@ func TestClient_ShortSellingValue(t *testing.T) {
 		t.Errorf("Empty short selling value")
 	}
 }
+
+func TestClient_TradingCalendar(t *testing.T) {
+	ctx := context.Background()
+	httpClient := &http.Client{}
+	client, err := NewClient(ctx, httpClient)
+	if err != nil {
+		t.Fatal(err)
+	}
+	res, err := client.TradingCalendar(ctx, TradingCalendarRequest{})
+	if err != nil {
+		t.Errorf("Failed to get trading calendar: %s", err)
+	}
+	if len(res) == 0 {
+		t.Errorf("Empty trading calendar")
+	}
+}
