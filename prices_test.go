@@ -8,16 +8,14 @@ import (
 	"testing"
 )
 
-var code = "13010"
-
 func TestClient_StockPrice(t *testing.T) {
+	var code = "13010"
 	ctx := context.Background()
 	httpClient := &http.Client{}
 	client, err := NewClient(ctx, httpClient)
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	req := StockPriceRequest{Code: &code}
 	res, err := client.StockPrice(ctx, req)
 	if err != nil {
@@ -29,13 +27,13 @@ func TestClient_StockPrice(t *testing.T) {
 }
 
 func TestClient_StockPriceWithChannel(t *testing.T) {
+	var code = "13010"
 	ctx := context.Background()
 	httpClient := &http.Client{}
 	client, err := NewClient(ctx, httpClient)
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 	req := StockPriceRequest{Code: &code}
@@ -45,7 +43,6 @@ func TestClient_StockPriceWithChannel(t *testing.T) {
 			t.Errorf("Failed to get stock price: %s", e)
 		}
 	}()
-
 	found := false
 	for range ch {
 		found = true
