@@ -88,6 +88,13 @@ func unmarshalLimit(s string) (bool, error) {
 }
 
 type StockPriceRequest struct {
+	Code *string
+	Date *time.Time
+	From *time.Time
+	To   *time.Time
+}
+
+type stockPriceParameter struct {
 	Code          *string
 	Date          *time.Time
 	From          *time.Time
@@ -95,24 +102,24 @@ type StockPriceRequest struct {
 	PaginationKey *string
 }
 
-func (r *StockPriceRequest) values() (url.Values, error) {
+func (p stockPriceParameter) values() (url.Values, error) {
 	v := url.Values{}
-	if r.Date != nil {
-		v.Add("date", r.Date.Format(time.DateOnly))
+	if p.Date != nil {
+		v.Add("date", p.Date.Format(time.DateOnly))
 	} else {
-		if r.Code == nil {
+		if p.Code == nil {
 			return nil, fmt.Errorf("code or date is required")
 		}
-		v.Add("code", *r.Code)
-		if r.From != nil {
-			v.Add("from", r.From.Format(time.DateOnly))
+		v.Add("code", *p.Code)
+		if p.From != nil {
+			v.Add("from", p.From.Format(time.DateOnly))
 		}
-		if r.To != nil {
-			v.Add("to", r.To.Format(time.DateOnly))
+		if p.To != nil {
+			v.Add("to", p.To.Format(time.DateOnly))
 		}
 	}
-	if r.PaginationKey != nil {
-		v.Add("pagination_key", *r.PaginationKey)
+	if p.PaginationKey != nil {
+		v.Add("pagination_key", *p.PaginationKey)
 	}
 	return v, nil
 }
@@ -122,43 +129,29 @@ type stockPriceResponse struct {
 	PaginationKey *string      `json:"pagination_key"`
 }
 
-func (c *Client) sendStockPriceRequest(ctx context.Context, req StockPriceRequest) (*stockPriceResponse, error) {
+func (c *Client) sendStockPriceRequest(ctx context.Context, param stockPriceParameter) (*stockPriceResponse, error) {
 	var r stockPriceResponse
-
-	u, err := url.Parse(c.baseURL + "/prices/daily_quotes")
-	if err != nil {
-		panic(err)
-	}
-	v, err := req.values()
-	if err != nil {
-		panic(err)
-	}
-	u.RawQuery = v.Encode()
-	resp, err := c.sendGetRequest(ctx, u)
+	resp, err := c.sendRequest(ctx, "/prices/daily_quotes", param)
 	if err != nil {
 		return nil, fmt.Errorf("failed to send GET request: %w", err)
 	}
-
 	if resp.StatusCode != 200 {
 		return nil, handleErrorResponse(resp)
 	}
 	if err = decodeResponse(resp, &r); err != nil {
 		return nil, fmt.Errorf("failed to decode HTTP response: %w", err)
 	}
-
 	return &r, nil
 }
 
 func (c *Client) StockPrice(ctx context.Context, req StockPriceRequest) ([]StockPrice, error) {
-	var sps = make([]StockPrice, 0)
+	var data = make([]StockPrice, 0)
 	var paginationKey *string
-
 	ctx, cancel := context.WithTimeout(ctx, c.loopTimeout)
 	defer cancel()
-
 	for {
-		subReq := StockPriceRequest{req.Code, req.Date, req.From, req.To, paginationKey}
-		resp, err := c.sendStockPriceRequest(ctx, subReq)
+		param := stockPriceParameter{req.Code, req.Date, req.From, req.To, paginationKey}
+		resp, err := c.sendStockPriceRequest(ctx, param)
 		if err != nil {
 			if errors.As(err, &InternalServerError{}) {
 				slog.Warn("Retrying HTTP request", "error", err.Error())
@@ -168,24 +161,22 @@ func (c *Client) StockPrice(ctx context.Context, req StockPriceRequest) ([]Stock
 				return nil, fmt.Errorf("failed to send stock price request: %w", err)
 			}
 		}
-		sps = append(sps, resp.Data...)
+		data = append(data, resp.Data...)
 		paginationKey = resp.PaginationKey
 		if resp.PaginationKey == nil {
 			break
 		}
 	}
-	return sps, nil
+	return data, nil
 }
 
 func (c *Client) StockPriceWithChannel(ctx context.Context, req StockPriceRequest, ch chan<- StockPrice) error {
 	var paginationKey *string
-
 	ctx, cancel := context.WithTimeout(ctx, c.loopTimeout)
 	defer cancel()
-
 	for {
-		subReq := StockPriceRequest{req.Code, req.Date, req.From, req.To, paginationKey}
-		resp, err := c.sendStockPriceRequest(ctx, subReq)
+		param := stockPriceParameter{req.Code, req.Date, req.From, req.To, paginationKey}
+		resp, err := c.sendStockPriceRequest(ctx, param)
 		if err != nil {
 			if errors.As(err, &InternalServerError{}) {
 				slog.Warn("Retrying HTTP request", "error", err.Error())
