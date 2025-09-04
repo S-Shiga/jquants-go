@@ -16,20 +16,18 @@ import (
 const baseURL = "https://api.jquants.com/v1"
 
 type Client struct {
-	httpClient   *http.Client
-	baseURL      string
-	mailAddress  string
-	password     string
-	refreshToken string
-	idToken      string
-
+	httpClient    *http.Client
+	baseURL       string
+	mailAddress   string
+	password      string
+	refreshToken  string
+	idToken       string
 	retryInterval time.Duration
 	loopTimeout   time.Duration
 }
 
 func NewClient(ctx context.Context, httpClient *http.Client) (*Client, error) {
 	var err error
-
 	email, ok := os.LookupEnv("J_QUANTS_EMAIL_ADDRESS")
 	if !ok {
 		return nil, errors.New("J_QUANTS_EMAIL_ADDRESS not set")
@@ -38,28 +36,23 @@ func NewClient(ctx context.Context, httpClient *http.Client) (*Client, error) {
 	if !ok {
 		return nil, errors.New("J_QUANTS_PASSWORD not set")
 	}
-
 	client := &Client{
-		httpClient:  httpClient,
-		baseURL:     baseURL,
-		mailAddress: email,
-		password:    password,
-
+		httpClient:    httpClient,
+		baseURL:       baseURL,
+		mailAddress:   email,
+		password:      password,
 		retryInterval: 5 * time.Second,
 		loopTimeout:   20 * time.Second,
 	}
-
 	refreshToken := os.Getenv("J_QUANTS_REFRESH_TOKEN")
 	if refreshToken == "" {
 		if err = client.resetRefreshToken(ctx); err != nil {
 			return nil, err
 		}
 	}
-
 	if err = client.resetIDToken(ctx); err != nil {
 		return nil, err
 	}
-
 	return client, nil
 }
 
@@ -92,11 +85,11 @@ func (c *Client) sendGetRequest(ctx context.Context, u *url.URL) (*http.Response
 	return resp, nil
 }
 
-type parameter interface {
+type parameters interface {
 	values() (url.Values, error)
 }
 
-func (c *Client) sendRequest(ctx context.Context, urlPath string, param parameter) (*http.Response, error) {
+func (c *Client) sendRequest(ctx context.Context, urlPath string, param parameters) (*http.Response, error) {
 	u, err := url.Parse(c.baseURL + urlPath)
 	if err != nil {
 		panic(err)
