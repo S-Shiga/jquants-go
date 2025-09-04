@@ -7,14 +7,24 @@ import (
 	"time"
 )
 
+var testClient *Client
+
+func setup(ctx context.Context) error {
+	if testClient != nil {
+		return nil
+	}
+	var err error
+	httpClient := &http.Client{Timeout: time.Second * 5}
+	testClient, err = NewClient(ctx, httpClient)
+	return err
+}
+
 func TestNewClient(t *testing.T) {
 	ctx := context.Background()
-	httpClient := &http.Client{Timeout: time.Second}
-	client, err := NewClient(ctx, httpClient)
-	if err != nil {
+	if err := setup(ctx); err != nil {
 		t.Fatalf("Failed to create client: %v", err)
 	}
-	if client.idToken == "" {
+	if testClient.idToken == "" {
 		t.Error("Empty ID Token")
 	}
 }
