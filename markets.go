@@ -255,7 +255,7 @@ func (c *Client) sendStockTradingValueRequest(ctx context.Context, param stockTr
 // StockTradingValue provides trading by type of investors.
 // https://jpx.gitbook.io/j-quants-en/api-reference/trades_spec
 func (c *Client) StockTradingValue(ctx context.Context, req StockTradingValueRequest) ([]StockTradingValue, error) {
-	var data []StockTradingValue
+	var data = make([]StockTradingValue, 0)
 	var paginationKey *string
 	ctx, cancel := context.WithTimeout(ctx, c.loopTimeout)
 	defer cancel()
@@ -387,7 +387,7 @@ func (c *Client) sendMarginTradingVolumeRequest(ctx context.Context, param margi
 // MarginTradingVolume provides margin trading outstandings.
 // https://jpx.gitbook.io/j-quants-en/api-reference/weekly_margin_interest
 func (c *Client) MarginTradingVolume(ctx context.Context, req MarginTradingVolumeRequest) ([]MarginTradingVolume, error) {
-	var data []MarginTradingVolume
+	var data = make([]MarginTradingVolume, 0)
 	var paginationKey *string
 	ctx, cancel := context.WithTimeout(ctx, c.loopTimeout)
 	defer cancel()

@@ -204,7 +204,7 @@ func (c *Client) sendTopixPriceRequest(ctx context.Context, param topixPricePara
 }
 
 func (c *Client) TopixPrices(ctx context.Context, req TopixPriceRequest) ([]TopixPrice, error) {
-	var data []TopixPrice
+	var data = make([]TopixPrice, 0)
 	var paginationKey *string
 	ctx, cancel := context.WithTimeout(ctx, c.loopTimeout)
 	defer cancel()
