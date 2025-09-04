@@ -90,15 +90,12 @@ type StockPriceRequest struct {
 	To   *string
 }
 
-type stockPriceParameter struct {
-	Code          *string
-	Date          *string
-	From          *string
-	To            *string
+type stockPriceParameters struct {
+	StockPriceRequest
 	PaginationKey *string
 }
 
-func (p stockPriceParameter) values() (url.Values, error) {
+func (p stockPriceParameters) values() (url.Values, error) {
 	v := url.Values{}
 	if p.Date != nil {
 		v.Add("date", *p.Date)
@@ -125,7 +122,7 @@ type stockPriceResponse struct {
 	PaginationKey *string      `json:"pagination_key"`
 }
 
-func (c *Client) sendStockPriceRequest(ctx context.Context, param stockPriceParameter) (*stockPriceResponse, error) {
+func (c *Client) sendStockPriceRequest(ctx context.Context, param stockPriceParameters) (*stockPriceResponse, error) {
 	var r stockPriceResponse
 	resp, err := c.sendRequest(ctx, "/prices/daily_quotes", param)
 	if err != nil {
@@ -146,8 +143,8 @@ func (c *Client) StockPrice(ctx context.Context, req StockPriceRequest) ([]Stock
 	ctx, cancel := context.WithTimeout(ctx, c.loopTimeout)
 	defer cancel()
 	for {
-		param := stockPriceParameter{req.Code, req.Date, req.From, req.To, paginationKey}
-		resp, err := c.sendStockPriceRequest(ctx, param)
+		params := stockPriceParameters{req, paginationKey}
+		resp, err := c.sendStockPriceRequest(ctx, params)
 		if err != nil {
 			if errors.As(err, &InternalServerError{}) {
 				slog.Warn("Retrying HTTP request", "error", err.Error())
@@ -171,8 +168,8 @@ func (c *Client) StockPriceWithChannel(ctx context.Context, req StockPriceReques
 	ctx, cancel := context.WithTimeout(ctx, c.loopTimeout)
 	defer cancel()
 	for {
-		param := stockPriceParameter{req.Code, req.Date, req.From, req.To, paginationKey}
-		resp, err := c.sendStockPriceRequest(ctx, param)
+		params := stockPriceParameters{StockPriceRequest: req, PaginationKey: paginationKey}
+		resp, err := c.sendStockPriceRequest(ctx, params)
 		if err != nil {
 			if errors.As(err, &InternalServerError{}) {
 				slog.Warn("Retrying HTTP request", "error", err.Error())

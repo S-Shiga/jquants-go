@@ -47,15 +47,12 @@ type IndexPriceRequest struct {
 	To   *string
 }
 
-type indexPriceParameter struct {
-	Code          *string
-	Date          *string
-	From          *string
-	To            *string
+type indexPriceParameters struct {
+	IndexPriceRequest
 	PaginationKey *string
 }
 
-func (p indexPriceParameter) values() (url.Values, error) {
+func (p indexPriceParameters) values() (url.Values, error) {
 	v := url.Values{}
 	if p.Date != nil {
 		v.Add("date", *p.Date)
@@ -82,9 +79,9 @@ type indexPriceResponse struct {
 	PaginationKey *string      `json:"pagination_key"`
 }
 
-func (c *Client) sendIndexPriceRequest(ctx context.Context, param indexPriceParameter) (indexPriceResponse, error) {
+func (c *Client) sendIndexPriceRequest(ctx context.Context, params indexPriceParameters) (indexPriceResponse, error) {
 	var r indexPriceResponse
-	resp, err := c.sendRequest(ctx, "/indices", param)
+	resp, err := c.sendRequest(ctx, "/indices", params)
 	if err != nil {
 		return r, fmt.Errorf("failed to send GET request: %w", err)
 	}
@@ -103,8 +100,8 @@ func (c *Client) IndexPrice(ctx context.Context, req IndexPriceRequest) ([]Index
 	ctx, cancel := context.WithTimeout(ctx, c.loopTimeout)
 	defer cancel()
 	for {
-		param := indexPriceParameter{req.Code, req.Date, req.From, req.To, paginationKey}
-		resp, err := c.sendIndexPriceRequest(ctx, param)
+		params := indexPriceParameters{IndexPriceRequest: req, PaginationKey: paginationKey}
+		resp, err := c.sendIndexPriceRequest(ctx, params)
 		if err != nil {
 			if errors.As(err, &InternalServerError{}) {
 				slog.Warn("Retrying HTTP request", "error", err.Error())
@@ -155,13 +152,12 @@ type TopixPriceRequest struct {
 	To   *string
 }
 
-type topixPriceParameter struct {
-	From          *string
-	To            *string
+type topixPriceParameters struct {
+	TopixPriceRequest
 	PaginationKey *string
 }
 
-func (p topixPriceParameter) values() (url.Values, error) {
+func (p topixPriceParameters) values() (url.Values, error) {
 	v := url.Values{}
 	if p.From != nil {
 		v.Add("from", *p.From)
@@ -180,9 +176,9 @@ type topixPriceResponse struct {
 	PaginationKey *string      `json:"pagination_key"`
 }
 
-func (c *Client) sendTopixPriceRequest(ctx context.Context, param topixPriceParameter) (topixPriceResponse, error) {
+func (c *Client) sendTopixPriceRequest(ctx context.Context, params topixPriceParameters) (topixPriceResponse, error) {
 	var r topixPriceResponse
-	resp, err := c.sendRequest(ctx, "/indices/topix", param)
+	resp, err := c.sendRequest(ctx, "/indices/topix", params)
 	if err != nil {
 		return r, fmt.Errorf("failed to send GET request: %w", err)
 	}
@@ -201,8 +197,8 @@ func (c *Client) TopixPrices(ctx context.Context, req TopixPriceRequest) ([]Topi
 	ctx, cancel := context.WithTimeout(ctx, c.loopTimeout)
 	defer cancel()
 	for {
-		param := topixPriceParameter{req.From, req.To, paginationKey}
-		resp, err := c.sendTopixPriceRequest(ctx, param)
+		params := topixPriceParameters{TopixPriceRequest: req, PaginationKey: paginationKey}
+		resp, err := c.sendTopixPriceRequest(ctx, params)
 		if err != nil {
 			if errors.As(err, &InternalServerError{}) {
 				slog.Warn("Retrying HTTP request", "error", err.Error())

@@ -171,12 +171,12 @@ type IndexOptionPriceRequest struct {
 	Date string
 }
 
-type indexOptionPriceParameter struct {
-	Date          string
+type indexOptionPriceParameters struct {
+	IndexOptionPriceRequest
 	PaginationKey *string
 }
 
-func (p indexOptionPriceParameter) values() (url.Values, error) {
+func (p indexOptionPriceParameters) values() (url.Values, error) {
 	v := url.Values{}
 	v.Add("date", p.Date)
 	if p.PaginationKey != nil {
@@ -185,14 +185,14 @@ func (p indexOptionPriceParameter) values() (url.Values, error) {
 	return v, nil
 }
 
-type IndexOptionPriceResponse struct {
+type indexOptionPriceResponse struct {
 	Data          []IndexOptionPrice `json:"index_option"`
 	PaginationKey *string            `json:"pagination_key"`
 }
 
-func (c *Client) sendIndexOptionPriceRequest(ctx context.Context, param indexOptionPriceParameter) (IndexOptionPriceResponse, error) {
-	var r IndexOptionPriceResponse
-	resp, err := c.sendRequest(ctx, "/option/index_option", param)
+func (c *Client) sendIndexOptionPriceRequest(ctx context.Context, params indexOptionPriceParameters) (indexOptionPriceResponse, error) {
+	var r indexOptionPriceResponse
+	resp, err := c.sendRequest(ctx, "/option/index_option", params)
 	if err != nil {
 		return r, fmt.Errorf("failed to send GET request: %w", err)
 	}
@@ -211,7 +211,7 @@ func (c *Client) IndexOptionPrice(ctx context.Context, req IndexOptionPriceReque
 	ctx, cancel := context.WithTimeout(ctx, c.loopTimeout)
 	defer cancel()
 	for {
-		param := indexOptionPriceParameter{Date: req.Date, PaginationKey: paginationKey}
+		param := indexOptionPriceParameters{IndexOptionPriceRequest: req, PaginationKey: paginationKey}
 		resp, err := c.sendIndexOptionPriceRequest(ctx, param)
 		if err != nil {
 			if errors.As(err, &InternalServerError{}) {
@@ -236,7 +236,7 @@ func (c *Client) IndexOptionPriceWithChannel(ctx context.Context, req IndexOptio
 	ctx, cancel := context.WithTimeout(ctx, c.loopTimeout)
 	defer cancel()
 	for {
-		param := indexOptionPriceParameter{Date: req.Date, PaginationKey: paginationKey}
+		param := indexOptionPriceParameters{IndexOptionPriceRequest: req, PaginationKey: paginationKey}
 		resp, err := c.sendIndexOptionPriceRequest(ctx, param)
 		if err != nil {
 			if errors.As(err, &InternalServerError{}) {

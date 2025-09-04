@@ -192,29 +192,26 @@ func (stv *StockTradingValue) UnmarshalJSON(b []byte) error {
 }
 
 type StockTradingValueRequest struct {
-	Section       *string
-	From          *time.Time
-	To            *time.Time
+	Section *string
+	From    *string
+	To      *string
+}
+
+type stockTradingValueParameters struct {
+	StockTradingValueRequest
 	PaginationKey *string
 }
 
-type stockTradingValueParameter struct {
-	Section       *string
-	From          *time.Time
-	To            *time.Time
-	PaginationKey *string
-}
-
-func (p stockTradingValueParameter) values() (url.Values, error) {
+func (p stockTradingValueParameters) values() (url.Values, error) {
 	v := url.Values{}
 	if p.Section != nil {
 		v.Add("section", *p.Section)
 	}
 	if p.From != nil {
-		v.Add("from", p.From.Format(time.DateOnly))
+		v.Add("from", *p.From)
 	}
 	if p.To != nil {
-		v.Add("to", p.To.Format(time.DateOnly))
+		v.Add("to", *p.To)
 	}
 	if p.PaginationKey != nil {
 		v.Add("pagination_key", *p.PaginationKey)
@@ -227,7 +224,7 @@ type stockTradingValueResponse struct {
 	PaginationKey *string             `json:"pagination_key"`
 }
 
-func (c *Client) sendStockTradingValueRequest(ctx context.Context, param stockTradingValueParameter) (stockTradingValueResponse, error) {
+func (c *Client) sendStockTradingValueRequest(ctx context.Context, param stockTradingValueParameters) (stockTradingValueResponse, error) {
 	var r stockTradingValueResponse
 	resp, err := c.sendRequest(ctx, "/markets/trades_spec", param)
 	if err != nil {
@@ -250,8 +247,8 @@ func (c *Client) StockTradingValue(ctx context.Context, req StockTradingValueReq
 	ctx, cancel := context.WithTimeout(ctx, c.loopTimeout)
 	defer cancel()
 	for {
-		param := stockTradingValueParameter{req.Section, req.From, req.To, paginationKey}
-		resp, err := c.sendStockTradingValueRequest(ctx, param)
+		params := stockTradingValueParameters{StockTradingValueRequest: req, PaginationKey: paginationKey}
+		resp, err := c.sendStockTradingValueRequest(ctx, params)
 		if err != nil {
 			if errors.As(err, &InternalServerError{}) {
 				slog.Warn("Retrying HTTP request", "error", err.Error())
@@ -316,33 +313,30 @@ func (mtv *MarginTradingVolume) UnmarshalJSON(b []byte) error {
 
 type MarginTradingVolumeRequest struct {
 	Code *string
-	Date *time.Time
-	From *time.Time
-	To   *time.Time
+	Date *string
+	From *string
+	To   *string
 }
 
-type marginTradingVolumeParameter struct {
-	Code          *string
-	Date          *time.Time
-	From          *time.Time
-	To            *time.Time
+type marginTradingVolumeParameters struct {
+	MarginTradingVolumeRequest
 	PaginationKey *string
 }
 
-func (p marginTradingVolumeParameter) values() (url.Values, error) {
+func (p marginTradingVolumeParameters) values() (url.Values, error) {
 	v := url.Values{}
 	if p.Date != nil {
-		v.Add("date", p.Date.Format(time.DateOnly))
+		v.Add("date", *p.Date)
 	} else {
 		if p.Code == nil {
 			return nil, errors.New("code or date is required")
 		}
 		v.Add("code", *p.Code)
 		if p.From != nil {
-			v.Add("from", p.From.Format(time.DateOnly))
+			v.Add("from", *p.From)
 		}
 		if p.To != nil {
-			v.Add("to", p.To.Format(time.DateOnly))
+			v.Add("to", *p.To)
 		}
 	}
 	if p.PaginationKey != nil {
@@ -356,7 +350,7 @@ type marginTradingVolumeResponse struct {
 	PaginationKey *string               `json:"pagination_key"`
 }
 
-func (c *Client) sendMarginTradingVolumeRequest(ctx context.Context, param marginTradingVolumeParameter) (marginTradingVolumeResponse, error) {
+func (c *Client) sendMarginTradingVolumeRequest(ctx context.Context, param marginTradingVolumeParameters) (marginTradingVolumeResponse, error) {
 	var r marginTradingVolumeResponse
 	resp, err := c.sendRequest(ctx, "/markets/weekly_margin_interest", param)
 	if err != nil {
@@ -379,8 +373,8 @@ func (c *Client) MarginTradingVolume(ctx context.Context, req MarginTradingVolum
 	ctx, cancel := context.WithTimeout(ctx, c.loopTimeout)
 	defer cancel()
 	for {
-		param := marginTradingVolumeParameter{req.Code, req.Date, req.From, req.To, paginationKey}
-		resp, err := c.sendMarginTradingVolumeRequest(ctx, param)
+		params := marginTradingVolumeParameters{MarginTradingVolumeRequest: req, PaginationKey: paginationKey}
+		resp, err := c.sendMarginTradingVolumeRequest(ctx, params)
 		if err != nil {
 			if errors.As(err, &InternalServerError{}) {
 				slog.Warn("Retrying HTTP request", "error", err.Error())
@@ -428,38 +422,35 @@ func (ssv *ShortSellingValue) UnmarshalJSON(b []byte) error {
 
 type ShortSellingValueRequest struct {
 	Sector33Code *string
-	Date         *time.Time
-	From         *time.Time
-	To           *time.Time
+	Date         *string
+	From         *string
+	To           *string
 }
 
-type shortSellingValueParameter struct {
-	Sector33Code  *string
-	Date          *time.Time
-	From          *time.Time
-	To            *time.Time
+type shortSellingValueParameters struct {
+	ShortSellingValueRequest
 	PaginationKey *string
 }
 
-func (p shortSellingValueParameter) values() (url.Values, error) {
+func (p shortSellingValueParameters) values() (url.Values, error) {
 	v := url.Values{}
 	if p.Sector33Code != nil {
 		v.Add("sector33code", *p.Sector33Code)
 		if p.Date != nil {
-			v.Add("date", p.Date.Format(time.DateOnly))
+			v.Add("date", *p.Date)
 		} else {
 			if p.From != nil {
-				v.Add("from", p.From.Format(time.DateOnly))
+				v.Add("from", *p.From)
 			}
 			if p.To != nil {
-				v.Add("to", p.To.Format(time.DateOnly))
+				v.Add("to", *p.To)
 			}
 		}
 	} else {
 		if p.Date == nil {
 			return nil, errors.New("sector33code or date is required")
 		}
-		v.Add("date", p.Date.Format(time.DateOnly))
+		v.Add("date", *p.Date)
 	}
 	if p.PaginationKey != nil {
 		v.Add("pagination_key", *p.PaginationKey)
@@ -472,7 +463,7 @@ type shortSellingValueResponse struct {
 	PaginationKey *string             `json:"pagination_key"`
 }
 
-func (c *Client) sendShortSellingValueRequest(ctx context.Context, req shortSellingValueParameter) (shortSellingValueResponse, error) {
+func (c *Client) sendShortSellingValueRequest(ctx context.Context, req shortSellingValueParameters) (shortSellingValueResponse, error) {
 	var r shortSellingValueResponse
 	resp, err := c.sendRequest(ctx, "/markets/short_selling", req)
 	if err != nil {
@@ -493,8 +484,8 @@ func (c *Client) ShortSellingValue(ctx context.Context, req ShortSellingValueReq
 	ctx, cancel := context.WithTimeout(ctx, c.loopTimeout)
 	defer cancel()
 	for {
-		param := shortSellingValueParameter{req.Sector33Code, req.Date, req.From, req.To, paginationKey}
-		resp, err := c.sendShortSellingValueRequest(ctx, param)
+		params := shortSellingValueParameters{ShortSellingValueRequest: req, PaginationKey: paginationKey}
+		resp, err := c.sendShortSellingValueRequest(ctx, params)
 		if err != nil {
 			if errors.As(err, &InternalServerError{}) {
 				slog.Warn("Retrying HTTP request", "error", err.Error())
@@ -543,20 +534,24 @@ func (tc *TradingCalendar) UnmarshalJSON(b []byte) error {
 
 type TradingCalendarRequest struct {
 	HolidayDivision *int8
-	From            *time.Time
-	To              *time.Time
+	From            *string
+	To              *string
 }
 
-func (r TradingCalendarRequest) values() (url.Values, error) {
+type tradingCalendarParameters struct {
+	TradingCalendarRequest
+}
+
+func (p tradingCalendarParameters) values() (url.Values, error) {
 	v := url.Values{}
-	if r.HolidayDivision != nil {
-		v.Add("holidaydivision", strconv.Itoa(int(*r.HolidayDivision)))
+	if p.HolidayDivision != nil {
+		v.Add("holidaydivision", strconv.Itoa(int(*p.HolidayDivision)))
 	}
-	if r.From != nil {
-		v.Add("from", r.From.Format(time.DateOnly))
+	if p.From != nil {
+		v.Add("from", *p.From)
 	}
-	if r.To != nil {
-		v.Add("to", r.To.Format(time.DateOnly))
+	if p.To != nil {
+		v.Add("to", *p.To)
 	}
 	return v, nil
 }
@@ -567,7 +562,8 @@ type tradingCalendarResponse struct {
 
 func (c *Client) TradingCalendar(ctx context.Context, req TradingCalendarRequest) ([]TradingCalendar, error) {
 	var r tradingCalendarResponse
-	resp, err := c.sendRequest(ctx, "/markets/trading_calendar", req)
+	params := tradingCalendarParameters{TradingCalendarRequest: req}
+	resp, err := c.sendRequest(ctx, "/markets/trading_calendar", params)
 	if err != nil {
 		return nil, fmt.Errorf("failed to send GET request: %w", err)
 	}
