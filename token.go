@@ -10,12 +10,12 @@ import (
 )
 
 func (c *Client) fetchRefreshToken(ctx context.Context) (string, error) {
-	u, err := url.Parse(c.baseURL + "/token/auth_user")
+	u, err := url.Parse(c.BaseURL + "/token/auth_user")
 	if err != nil {
 		panic(err)
 	}
 
-	body := map[string]string{"mailaddress": c.mailAddress, "password": c.password}
+	body := map[string]string{"mailaddress": c.MailAddress, "password": c.Password}
 	jsonBody, err := json.Marshal(body)
 	if err != nil {
 		panic(err)
@@ -48,7 +48,7 @@ func (c *Client) resetRefreshToken(ctx context.Context) error {
 }
 
 func (c *Client) fetchIDToken(ctx context.Context) (string, error) {
-	u, err := url.Parse(c.baseURL + "/token/auth_refresh")
+	u, err := url.Parse(c.BaseURL + "/token/auth_refresh")
 	if err != nil {
 		panic(err)
 	}

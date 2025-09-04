@@ -16,10 +16,10 @@ import (
 const baseURL = "https://api.jquants.com/v1"
 
 type Client struct {
-	httpClient    *http.Client
-	baseURL       string
-	mailAddress   string
-	password      string
+	HttpClient    *http.Client
+	BaseURL       string
+	MailAddress   string
+	Password      string
 	refreshToken  string
 	idToken       string
 	retryInterval time.Duration
@@ -37,10 +37,10 @@ func NewClient(ctx context.Context, httpClient *http.Client) (*Client, error) {
 		return nil, errors.New("J_QUANTS_PASSWORD not set")
 	}
 	client := &Client{
-		httpClient:    httpClient,
-		baseURL:       baseURL,
-		mailAddress:   email,
-		password:      password,
+		HttpClient:    httpClient,
+		BaseURL:       baseURL,
+		MailAddress:   email,
+		Password:      password,
 		retryInterval: 5 * time.Second,
 		loopTimeout:   20 * time.Second,
 	}
@@ -62,7 +62,7 @@ func (c *Client) sendPostRequest(ctx context.Context, u *url.URL, body io.Reader
 		return nil, fmt.Errorf("failed to build request: %w", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	resp, err := c.httpClient.Do(req)
+	resp, err := c.HttpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func (c *Client) sendGetRequest(ctx context.Context, u *url.URL) (*http.Response
 		panic("idToken is empty")
 	}
 	req.Header.Set("Authorization", "Bearer "+c.idToken)
-	resp, err := c.httpClient.Do(req)
+	resp, err := c.HttpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +90,7 @@ type parameters interface {
 }
 
 func (c *Client) sendRequest(ctx context.Context, urlPath string, param parameters) (*http.Response, error) {
-	u, err := url.Parse(c.baseURL + urlPath)
+	u, err := url.Parse(c.BaseURL + urlPath)
 	if err != nil {
 		panic(err)
 	}
