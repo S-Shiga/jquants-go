@@ -1,21 +1,20 @@
+//go:build fulltest
+
 package jquants
 
 import (
 	"context"
-	"net/http"
 	"testing"
 )
 
 func TestClient_IndexOptionPrice(t *testing.T) {
 	date := "2025-01-06"
 	ctx := context.Background()
-	httpClient := &http.Client{}
-	client, err := NewClient(ctx, httpClient)
-	if err != nil {
-		t.Fatal(err)
+	if err := setup(ctx); err != nil {
+		t.Fatalf("Failed to setup client: %v", err)
 	}
 	req := IndexOptionPriceRequest{Date: date}
-	resp, err := client.IndexOptionPrice(ctx, req)
+	resp, err := testClient.IndexOptionPrice(ctx, req)
 	if err != nil {
 		t.Errorf("Failed to get index option price: %v", err)
 	}
@@ -27,17 +26,15 @@ func TestClient_IndexOptionPrice(t *testing.T) {
 func TestClient_IndexOptionPriceWithChannel(t *testing.T) {
 	date := "2025-01-06"
 	ctx := context.Background()
-	httpClient := &http.Client{}
-	client, err := NewClient(ctx, httpClient)
-	if err != nil {
-		t.Fatal(err)
+	if err := setup(ctx); err != nil {
+		t.Fatalf("Failed to setup client: %v", err)
 	}
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 	req := IndexOptionPriceRequest{Date: date}
 	ch := make(chan IndexOptionPrice)
 	go func() {
-		if e := client.IndexOptionPriceWithChannel(ctx, req, ch); e != nil {
+		if e := testClient.IndexOptionPriceWithChannel(ctx, req, ch); e != nil {
 			t.Errorf("Failed to get index option price: %v", e)
 		}
 	}()

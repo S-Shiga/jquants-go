@@ -1,21 +1,20 @@
+//go:build fulltest
+
 package jquants
 
 import (
 	"context"
-	"net/http"
 	"testing"
 )
 
 func TestClient_IndexPrice(t *testing.T) {
 	var indexCode = "0000"
 	ctx := context.Background()
-	httpClient := &http.Client{}
-	client, err := NewClient(ctx, httpClient)
-	if err != nil {
-		t.Fatal(err)
+	if err := setup(ctx); err != nil {
+		t.Fatalf("Failed to setup client: %v", err)
 	}
 	req := IndexPriceRequest{Code: &indexCode}
-	res, err := client.IndexPrice(ctx, req)
+	res, err := testClient.IndexPrice(ctx, req)
 	if err != nil {
 		t.Errorf("Failed to get index price: %s", err)
 	}
@@ -26,12 +25,10 @@ func TestClient_IndexPrice(t *testing.T) {
 
 func TestClient_TopixPrices(t *testing.T) {
 	ctx := context.Background()
-	httpClient := &http.Client{}
-	client, err := NewClient(ctx, httpClient)
-	if err != nil {
-		t.Fatal(err)
+	if err := setup(ctx); err != nil {
+		t.Fatalf("Failed to setup client: %v", err)
 	}
-	res, err := client.TopixPrices(ctx, TopixPriceRequest{})
+	res, err := testClient.TopixPrices(ctx, TopixPriceRequest{})
 	if err != nil {
 		t.Errorf("Failed to get topix price: %s", err)
 	}

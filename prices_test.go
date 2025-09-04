@@ -4,20 +4,17 @@ package jquants
 
 import (
 	"context"
-	"net/http"
 	"testing"
 )
 
 func TestClient_StockPrice(t *testing.T) {
 	var code = "13010"
 	ctx := context.Background()
-	httpClient := &http.Client{}
-	client, err := NewClient(ctx, httpClient)
-	if err != nil {
-		t.Fatal(err)
+	if err := setup(ctx); err != nil {
+		t.Fatalf("Failed to setup client: %v", err)
 	}
 	req := StockPriceRequest{Code: &code}
-	res, err := client.StockPrice(ctx, req)
+	res, err := testClient.StockPrice(ctx, req)
 	if err != nil {
 		t.Errorf("Failed to get stock price: %s", err)
 	}
@@ -29,17 +26,15 @@ func TestClient_StockPrice(t *testing.T) {
 func TestClient_StockPriceWithChannel(t *testing.T) {
 	var code = "13010"
 	ctx := context.Background()
-	httpClient := &http.Client{}
-	client, err := NewClient(ctx, httpClient)
-	if err != nil {
-		t.Fatal(err)
+	if err := setup(ctx); err != nil {
+		t.Fatalf("Failed to setup client: %v", err)
 	}
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 	req := StockPriceRequest{Code: &code}
 	ch := make(chan StockPrice)
 	go func() {
-		if e := client.StockPriceWithChannel(ctx, req, ch); e != nil {
+		if e := testClient.StockPriceWithChannel(ctx, req, ch); e != nil {
 			t.Errorf("Failed to get stock price: %s", e)
 		}
 	}()

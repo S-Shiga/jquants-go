@@ -4,20 +4,17 @@ package jquants
 
 import (
 	"context"
-	"net/http"
 	"testing"
 )
 
 func TestClient_StockTradingValue(t *testing.T) {
 	var section = "TSEPrime"
 	ctx := context.Background()
-	httpClient := &http.Client{}
-	client, err := NewClient(ctx, httpClient)
-	if err != nil {
-		t.Fatal(err)
+	if err := setup(ctx); err != nil {
+		t.Fatalf("Failed to setup client: %v", err)
 	}
 	req := StockTradingValueRequest{Section: &section}
-	res, err := client.StockTradingValue(ctx, req)
+	res, err := testClient.StockTradingValue(ctx, req)
 	if err != nil {
 		t.Errorf("Failed to get stock trading value: %s", err)
 	}
@@ -29,13 +26,11 @@ func TestClient_StockTradingValue(t *testing.T) {
 func TestClient_MarginTradingVolume(t *testing.T) {
 	var code = "13010"
 	ctx := context.Background()
-	httpClient := &http.Client{}
-	client, err := NewClient(ctx, httpClient)
-	if err != nil {
-		t.Fatal(err)
+	if err := setup(ctx); err != nil {
+		t.Fatalf("Failed to setup client: %v", err)
 	}
 	req := MarginTradingVolumeRequest{Code: &code}
-	res, err := client.MarginTradingVolume(ctx, req)
+	res, err := testClient.MarginTradingVolume(ctx, req)
 	if err != nil {
 		t.Errorf("Failed to get margin trading volume: %s", err)
 	}
@@ -47,13 +42,11 @@ func TestClient_MarginTradingVolume(t *testing.T) {
 func TestClient_ShortSellingValue(t *testing.T) {
 	var sector33Code = "0050"
 	ctx := context.Background()
-	httpClient := &http.Client{}
-	client, err := NewClient(ctx, httpClient)
-	if err != nil {
-		t.Fatal(err)
+	if err := setup(ctx); err != nil {
+		t.Fatalf("Failed to setup client: %v", err)
 	}
 	req := ShortSellingValueRequest{Sector33Code: &sector33Code}
-	res, err := client.ShortSellingValue(ctx, req)
+	res, err := testClient.ShortSellingValue(ctx, req)
 	if err != nil {
 		t.Errorf("Failed to get short selling value: %s", err)
 	}
@@ -64,12 +57,10 @@ func TestClient_ShortSellingValue(t *testing.T) {
 
 func TestClient_TradingCalendar(t *testing.T) {
 	ctx := context.Background()
-	httpClient := &http.Client{}
-	client, err := NewClient(ctx, httpClient)
-	if err != nil {
-		t.Fatal(err)
+	if err := setup(ctx); err != nil {
+		t.Fatalf("Failed to setup client: %v", err)
 	}
-	res, err := client.TradingCalendar(ctx, TradingCalendarRequest{})
+	res, err := testClient.TradingCalendar(ctx, TradingCalendarRequest{})
 	if err != nil {
 		t.Errorf("Failed to get trading calendar: %s", err)
 	}
