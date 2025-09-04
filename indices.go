@@ -11,7 +11,7 @@ import (
 )
 
 type IndexPrice struct {
-	Date  time.Time   `json:"Date"`
+	Date  string      `json:"Date"`
 	Code  string      `json:"Code"`
 	Open  json.Number `json:"Open"`
 	High  json.Number `json:"High"`
@@ -31,11 +31,7 @@ func (ip *IndexPrice) UnmarshalJSON(b []byte) error {
 	if err := json.Unmarshal(b, &raw); err != nil {
 		return fmt.Errorf("failed to decode index price error response: %w", err)
 	}
-	t, err := time.Parse(time.DateOnly, raw.Date)
-	if err != nil {
-		return fmt.Errorf("failed to decode index price error response: %w", err)
-	}
-	ip.Date = t
+	ip.Date = raw.Date
 	ip.Code = raw.Code
 	ip.Open = raw.Open
 	ip.High = raw.High
@@ -46,33 +42,33 @@ func (ip *IndexPrice) UnmarshalJSON(b []byte) error {
 
 type IndexPriceRequest struct {
 	Code *string
-	Date *time.Time
-	From *time.Time
-	To   *time.Time
+	Date *string
+	From *string
+	To   *string
 }
 
 type indexPriceParameter struct {
 	Code          *string
-	Date          *time.Time
-	From          *time.Time
-	To            *time.Time
+	Date          *string
+	From          *string
+	To            *string
 	PaginationKey *string
 }
 
 func (p indexPriceParameter) values() (url.Values, error) {
 	v := url.Values{}
 	if p.Date != nil {
-		v.Add("date", p.Date.Format(time.DateOnly))
+		v.Add("date", *p.Date)
 	} else {
 		if p.Code == nil {
 			return nil, errors.New("code or date is required")
 		}
 		v.Add("code", *p.Code)
 		if p.From != nil {
-			v.Add("from", p.From.Format(time.DateOnly))
+			v.Add("from", *p.From)
 		}
 		if p.To != nil {
-			v.Add("to", p.To.Format(time.DateOnly))
+			v.Add("to", *p.To)
 		}
 	}
 	if p.PaginationKey != nil {
@@ -128,7 +124,7 @@ func (c *Client) IndexPrice(ctx context.Context, req IndexPriceRequest) ([]Index
 }
 
 type TopixPrice struct {
-	Date  time.Time   `json:"Date"`
+	Date  string      `json:"Date"`
 	Open  json.Number `json:"Open"`
 	High  json.Number `json:"High"`
 	Low   json.Number `json:"Low"`
@@ -146,11 +142,7 @@ func (p *TopixPrice) UnmarshalJSON(b []byte) error {
 	if err := json.Unmarshal(b, &raw); err != nil {
 		return fmt.Errorf("failed to unmarshal topix price: %w", err)
 	}
-	t, err := time.Parse(time.DateOnly, raw.Date)
-	if err != nil {
-		return fmt.Errorf("failed to parse date: %w", err)
-	}
-	p.Date = t
+	p.Date = raw.Date
 	p.Open = raw.Open
 	p.High = raw.High
 	p.Low = raw.Low
@@ -159,23 +151,23 @@ func (p *TopixPrice) UnmarshalJSON(b []byte) error {
 }
 
 type TopixPriceRequest struct {
-	From *time.Time
-	To   *time.Time
+	From *string
+	To   *string
 }
 
 type topixPriceParameter struct {
-	From          *time.Time
-	To            *time.Time
+	From          *string
+	To            *string
 	PaginationKey *string
 }
 
 func (p topixPriceParameter) values() (url.Values, error) {
 	v := url.Values{}
 	if p.From != nil {
-		v.Add("from", p.From.Format(time.DateOnly))
+		v.Add("from", *p.From)
 	}
 	if p.To != nil {
-		v.Add("to", p.To.Format(time.DateOnly))
+		v.Add("to", *p.To)
 	}
 	if p.PaginationKey != nil {
 		v.Add("pagination_key", *p.PaginationKey)

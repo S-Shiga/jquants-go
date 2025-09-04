@@ -4,11 +4,10 @@ import (
 	"context"
 	"net/http"
 	"testing"
-	"time"
 )
 
 func TestClient_IndexOptionPrice(t *testing.T) {
-	date := time.Date(2025, 1, 6, 0, 0, 0, 0, time.UTC)
+	date := "2025-01-06"
 	ctx := context.Background()
 	httpClient := &http.Client{}
 	client, err := NewClient(ctx, httpClient)
@@ -26,7 +25,7 @@ func TestClient_IndexOptionPrice(t *testing.T) {
 }
 
 func TestClient_IndexOptionPriceWithChannel(t *testing.T) {
-	date := time.Date(2025, 1, 6, 0, 0, 0, 0, time.UTC)
+	date := "2025-01-06"
 	ctx := context.Background()
 	httpClient := &http.Client{}
 	client, err := NewClient(ctx, httpClient)

@@ -12,62 +12,62 @@ import (
 )
 
 type StockTradingValue struct {
-	PublishedDate                       time.Time `json:"PublishedDate"`
-	StartDate                           time.Time `json:"StartDate"`
-	EndDate                             time.Time `json:"EndDate"`
-	Section                             string    `json:"Section"`
-	ProprietarySales                    int64     `json:"ProprietarySales"`
-	ProprietaryPurchases                int64     `json:"ProprietaryPurchases"`
-	ProprietaryTotal                    int64     `json:"ProprietaryTotal"`
-	ProprietaryBalance                  int64     `json:"ProprietaryBalance"`
-	BrokerageSales                      int64     `json:"BrokerageSales"`
-	BrokeragePurchases                  int64     `json:"BrokeragePurchases"`
-	BrokerageTotal                      int64     `json:"BrokerageTotal"`
-	BrokerageBalance                    int64     `json:"BrokerageBalance"`
-	NetSales                            int64     `json:"TotalSales"`
-	NetPurchases                        int64     `json:"TotalPurchases"`
-	NetTotal                            int64     `json:"TotalTotal"`
-	NetBalance                          int64     `json:"TotalBalance"`
-	IndividualsSales                    int64     `json:"IndividualsSales"`
-	IndividualsPurchases                int64     `json:"IndividualsPurchases"`
-	IndividualsTotal                    int64     `json:"IndividualsTotal"`
-	IndividualsBalance                  int64     `json:"IndividualsBalance"`
-	ForeignersSales                     int64     `json:"ForeignersSales"`
-	ForeignersPurchases                 int64     `json:"ForeignersPurchases"`
-	ForeignersTotal                     int64     `json:"ForeignersTotal"`
-	ForeignersBalance                   int64     `json:"ForeignersBalance"`
-	SecuritiesCosSales                  int64     `json:"SecuritiesCosSales"`
-	SecuritiesCosPurchases              int64     `json:"SecuritiesCosPurchases"`
-	SecuritiesCosTotal                  int64     `json:"SecuritiesCosTotal"`
-	SecuritiesCosBalance                int64     `json:"SecuritiesCosBalance"`
-	InvestmentTrustsSales               int64     `json:"InvestmentTrustsSales"`
-	InvestmentTrustsPurchases           int64     `json:"InvestmentTrustsPurchases"`
-	InvestmentTrustsTotal               int64     `json:"InvestmentTrustsTotal"`
-	InvestmentTrustsBalance             int64     `json:"InvestmentTrustsBalance"`
-	BusinessCosSales                    int64     `json:"BusinessCosSales"`
-	BusinessCosPurchases                int64     `json:"BusinessCosPurchases"`
-	BusinessCosTotal                    int64     `json:"BusinessCosTotal"`
-	BusinessCosBalance                  int64     `json:"BusinessCosBalance"`
-	OtherCosSales                       int64     `json:"OtherCosSales"`
-	OtherCosPurchases                   int64     `json:"OtherCosPurchases"`
-	OtherCosTotal                       int64     `json:"OtherCosTotal"`
-	OtherCosBalance                     int64     `json:"OtherCosBalance"`
-	InsuranceCosSales                   int64     `json:"InsuranceCosSales"`
-	InsuranceCosPurchases               int64     `json:"InsuranceCosPurchases"`
-	InsuranceCosTotal                   int64     `json:"InsuranceCosTotal"`
-	InsuranceCosBalance                 int64     `json:"InsuranceCosBalance"`
-	BanksSales                          int64     `json:"CityBKsRegionalBKsEtcSales"`
-	BanksPurchases                      int64     `json:"CityBKsRegionalBKsEtcPurchases"`
-	BanksTotal                          int64     `json:"CityBKsRegionalBKsEtcTotal"`
-	BanksBalance                        int64     `json:"CityBKsRegionalBKsEtcBalance"`
-	TrustBanksSales                     int64     `json:"TrustBanksSales"`
-	TrustBanksPurchases                 int64     `json:"TrustBanksPurchases"`
-	TrustBanksTotal                     int64     `json:"TrustBanksTotal"`
-	TrustBanksBalance                   int64     `json:"TrustBanksBalance"`
-	OtherFinancialInstitutionsSales     int64     `json:"OtherFinancialInstitutionsSales"`
-	OtherFinancialInstitutionsPurchases int64     `json:"OtherFinancialInstitutionsPurchases"`
-	OtherFinancialInstitutionsTotal     int64     `json:"OtherFinancialInstitutionsTotal"`
-	OtherFinancialInstitutionsBalance   int64     `json:"OtherFinancialInstitutionsBalance"`
+	PublishedDate                       string `json:"PublishedDate"`
+	StartDate                           string `json:"StartDate"`
+	EndDate                             string `json:"EndDate"`
+	Section                             string `json:"Section"`
+	ProprietarySales                    int64  `json:"ProprietarySales"`
+	ProprietaryPurchases                int64  `json:"ProprietaryPurchases"`
+	ProprietaryTotal                    int64  `json:"ProprietaryTotal"`
+	ProprietaryBalance                  int64  `json:"ProprietaryBalance"`
+	BrokerageSales                      int64  `json:"BrokerageSales"`
+	BrokeragePurchases                  int64  `json:"BrokeragePurchases"`
+	BrokerageTotal                      int64  `json:"BrokerageTotal"`
+	BrokerageBalance                    int64  `json:"BrokerageBalance"`
+	NetSales                            int64  `json:"TotalSales"`
+	NetPurchases                        int64  `json:"TotalPurchases"`
+	NetTotal                            int64  `json:"TotalTotal"`
+	NetBalance                          int64  `json:"TotalBalance"`
+	IndividualsSales                    int64  `json:"IndividualsSales"`
+	IndividualsPurchases                int64  `json:"IndividualsPurchases"`
+	IndividualsTotal                    int64  `json:"IndividualsTotal"`
+	IndividualsBalance                  int64  `json:"IndividualsBalance"`
+	ForeignersSales                     int64  `json:"ForeignersSales"`
+	ForeignersPurchases                 int64  `json:"ForeignersPurchases"`
+	ForeignersTotal                     int64  `json:"ForeignersTotal"`
+	ForeignersBalance                   int64  `json:"ForeignersBalance"`
+	SecuritiesCosSales                  int64  `json:"SecuritiesCosSales"`
+	SecuritiesCosPurchases              int64  `json:"SecuritiesCosPurchases"`
+	SecuritiesCosTotal                  int64  `json:"SecuritiesCosTotal"`
+	SecuritiesCosBalance                int64  `json:"SecuritiesCosBalance"`
+	InvestmentTrustsSales               int64  `json:"InvestmentTrustsSales"`
+	InvestmentTrustsPurchases           int64  `json:"InvestmentTrustsPurchases"`
+	InvestmentTrustsTotal               int64  `json:"InvestmentTrustsTotal"`
+	InvestmentTrustsBalance             int64  `json:"InvestmentTrustsBalance"`
+	BusinessCosSales                    int64  `json:"BusinessCosSales"`
+	BusinessCosPurchases                int64  `json:"BusinessCosPurchases"`
+	BusinessCosTotal                    int64  `json:"BusinessCosTotal"`
+	BusinessCosBalance                  int64  `json:"BusinessCosBalance"`
+	OtherCosSales                       int64  `json:"OtherCosSales"`
+	OtherCosPurchases                   int64  `json:"OtherCosPurchases"`
+	OtherCosTotal                       int64  `json:"OtherCosTotal"`
+	OtherCosBalance                     int64  `json:"OtherCosBalance"`
+	InsuranceCosSales                   int64  `json:"InsuranceCosSales"`
+	InsuranceCosPurchases               int64  `json:"InsuranceCosPurchases"`
+	InsuranceCosTotal                   int64  `json:"InsuranceCosTotal"`
+	InsuranceCosBalance                 int64  `json:"InsuranceCosBalance"`
+	BanksSales                          int64  `json:"CityBKsRegionalBKsEtcSales"`
+	BanksPurchases                      int64  `json:"CityBKsRegionalBKsEtcPurchases"`
+	BanksTotal                          int64  `json:"CityBKsRegionalBKsEtcTotal"`
+	BanksBalance                        int64  `json:"CityBKsRegionalBKsEtcBalance"`
+	TrustBanksSales                     int64  `json:"TrustBanksSales"`
+	TrustBanksPurchases                 int64  `json:"TrustBanksPurchases"`
+	TrustBanksTotal                     int64  `json:"TrustBanksTotal"`
+	TrustBanksBalance                   int64  `json:"TrustBanksBalance"`
+	OtherFinancialInstitutionsSales     int64  `json:"OtherFinancialInstitutionsSales"`
+	OtherFinancialInstitutionsPurchases int64  `json:"OtherFinancialInstitutionsPurchases"`
+	OtherFinancialInstitutionsTotal     int64  `json:"OtherFinancialInstitutionsTotal"`
+	OtherFinancialInstitutionsBalance   int64  `json:"OtherFinancialInstitutionsBalance"`
 }
 
 func (stv *StockTradingValue) UnmarshalJSON(b []byte) error {
@@ -132,19 +132,9 @@ func (stv *StockTradingValue) UnmarshalJSON(b []byte) error {
 	if err := json.Unmarshal(b, &raw); err != nil {
 		return err
 	}
-	var err error
-	stv.PublishedDate, err = time.Parse(time.DateOnly, raw.PublishedDate)
-	if err != nil {
-		return err
-	}
-	stv.StartDate, err = time.Parse(time.DateOnly, raw.StartDate)
-	if err != nil {
-		return err
-	}
-	stv.EndDate, err = time.Parse(time.DateOnly, raw.EndDate)
-	if err != nil {
-		return err
-	}
+	stv.PublishedDate = raw.PublishedDate
+	stv.StartDate = raw.StartDate
+	stv.EndDate = raw.EndDate
 	stv.Section = raw.Section
 	stv.ProprietarySales = int64(raw.ProprietarySales)
 	stv.ProprietaryPurchases = int64(raw.ProprietaryPurchases)
@@ -281,15 +271,15 @@ func (c *Client) StockTradingValue(ctx context.Context, req StockTradingValueReq
 }
 
 type MarginTradingVolume struct {
-	Date                               time.Time `json:"Date"`
-	Code                               string    `json:"Code"`
-	ShortMarginTradeVolume             int64     `json:"ShortMarginTradeVolume"`
-	LongMarginTradeVolume              int64     `json:"LongMarginTradeVolume"`
-	ShortNegotiableMarginTradeVolume   int64     `json:"ShortNegotiableMarginTradeVolume"`
-	LongNegotiableMarginTradeVolume    int64     `json:"LongNegotiableMarginTradeVolume"`
-	ShortStandardizedMarginTradeVolume int64     `json:"ShortStandardizedMarginTradeVolume"`
-	LongStandardizedMarginTradeVolume  int64     `json:"LongStandardizedMarginTradeVolume"`
-	IssueType                          int8      `json:"IssueType"`
+	Date                               string `json:"Date"`
+	Code                               string `json:"Code"`
+	ShortMarginTradeVolume             int64  `json:"ShortMarginTradeVolume"`
+	LongMarginTradeVolume              int64  `json:"LongMarginTradeVolume"`
+	ShortNegotiableMarginTradeVolume   int64  `json:"ShortNegotiableMarginTradeVolume"`
+	LongNegotiableMarginTradeVolume    int64  `json:"LongNegotiableMarginTradeVolume"`
+	ShortStandardizedMarginTradeVolume int64  `json:"ShortStandardizedMarginTradeVolume"`
+	LongStandardizedMarginTradeVolume  int64  `json:"LongStandardizedMarginTradeVolume"`
+	IssueType                          int8   `json:"IssueType"`
 }
 
 func (mtv *MarginTradingVolume) UnmarshalJSON(b []byte) error {
@@ -308,10 +298,7 @@ func (mtv *MarginTradingVolume) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("failed to decode margin trade volume error response: %w", err)
 	}
 	var err error
-	mtv.Date, err = time.Parse(time.DateOnly, raw.Date)
-	if err != nil {
-		return fmt.Errorf("failed to decode margin trade volume error response: %w", err)
-	}
+	mtv.Date = raw.Date
 	issueType, err := strconv.ParseInt(raw.IssueType, 10, 8)
 	if err != nil {
 		return fmt.Errorf("failed to decode margin trade volume error response: %w", err)
@@ -413,11 +400,11 @@ func (c *Client) MarginTradingVolume(ctx context.Context, req MarginTradingVolum
 }
 
 type ShortSellingValue struct {
-	Date                                         time.Time `json:"Date"`
-	Sector33Code                                 string    `json:"Sector33Code"`
-	SellingExcludingShortSellingTurnoverValue    int64     `json:"SellingExcludingShortSellingTurnoverValue"`
-	ShortSellingWithRestrictionsTurnoverValue    int64     `json:"ShortSellingWithRestrictionsTurnoverValue"`
-	ShortSellingWithoutRestrictionsTurnoverValue int64     `json:"ShortSellingWithoutRestrictionsTurnoverValue"`
+	Date                                         string `json:"Date"`
+	Sector33Code                                 string `json:"Sector33Code"`
+	SellingExcludingShortSellingTurnoverValue    int64  `json:"SellingExcludingShortSellingTurnoverValue"`
+	ShortSellingWithRestrictionsTurnoverValue    int64  `json:"ShortSellingWithRestrictionsTurnoverValue"`
+	ShortSellingWithoutRestrictionsTurnoverValue int64  `json:"ShortSellingWithoutRestrictionsTurnoverValue"`
 }
 
 func (ssv *ShortSellingValue) UnmarshalJSON(b []byte) error {
@@ -431,11 +418,7 @@ func (ssv *ShortSellingValue) UnmarshalJSON(b []byte) error {
 	if err := json.Unmarshal(b, &raw); err != nil {
 		return fmt.Errorf("failed to decode short selling value error response: %w", err)
 	}
-	t, err := time.Parse(time.DateOnly, raw.Date)
-	if err != nil {
-		return fmt.Errorf("failed to decode short selling value error response: %w", err)
-	}
-	ssv.Date = t
+	ssv.Date = raw.Date
 	ssv.Sector33Code = raw.Sector33Code
 	ssv.SellingExcludingShortSellingTurnoverValue = int64(raw.SellingExcludingShortSellingTurnoverValue)
 	ssv.ShortSellingWithRestrictionsTurnoverValue = int64(raw.ShortSellingWithRestrictionsTurnoverValue)
@@ -537,8 +520,8 @@ func (c *Client) ShortSellingValue(ctx context.Context, req ShortSellingValueReq
 // Breakdown Trading not implemented
 
 type TradingCalendar struct {
-	Date            time.Time `json:"Date"`
-	HolidayDivision int8      `json:"HolidayDivision"`
+	Date            string `json:"Date"`
+	HolidayDivision int8   `json:"HolidayDivision"`
 }
 
 func (tc *TradingCalendar) UnmarshalJSON(b []byte) error {
@@ -549,15 +532,11 @@ func (tc *TradingCalendar) UnmarshalJSON(b []byte) error {
 	if err := json.Unmarshal(b, &raw); err != nil {
 		return fmt.Errorf("failed to decode holiday division error response: %w", err)
 	}
-	t, err := time.Parse(time.DateOnly, raw.Date)
-	if err != nil {
-		return fmt.Errorf("failed to decode holiday division error response: %w", err)
-	}
+	tc.Date = raw.Date
 	hd, err := strconv.ParseInt(raw.HolidayDivision, 10, 8)
 	if err != nil {
 		return fmt.Errorf("failed to decode holiday division error response: %w", err)
 	}
-	tc.Date = t
 	tc.HolidayDivision = int8(hd)
 	return nil
 }

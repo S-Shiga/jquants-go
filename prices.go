@@ -11,7 +11,7 @@ import (
 )
 
 type StockPrice struct {
-	Date             time.Time    `json:"Date"`
+	Date             string       `json:"Date"`
 	Code             string       `json:"Code"`
 	Open             *json.Number `json:"Open"`
 	High             *json.Number `json:"High"`
@@ -42,10 +42,6 @@ func (sp *StockPrice) UnmarshalJSON(b []byte) error {
 	if err := json.Unmarshal(b, &raw); err != nil {
 		return err
 	}
-	t, err := time.Parse(time.DateOnly, raw.Date)
-	if err != nil {
-		return err
-	}
 	upperLimit, err := unmarshalLimit(raw.UpperLimit)
 	if err != nil {
 		return err
@@ -62,7 +58,7 @@ func (sp *StockPrice) UnmarshalJSON(b []byte) error {
 		v := int64(*raw.TurnoverValue)
 		turnoverValue = &v
 	}
-	sp.Date = t
+	sp.Date = raw.Date
 	sp.Code = raw.Code
 	sp.Open = raw.Open
 	sp.High = raw.High
@@ -89,33 +85,33 @@ func unmarshalLimit(s string) (bool, error) {
 
 type StockPriceRequest struct {
 	Code *string
-	Date *time.Time
-	From *time.Time
-	To   *time.Time
+	Date *string
+	From *string
+	To   *string
 }
 
 type stockPriceParameter struct {
 	Code          *string
-	Date          *time.Time
-	From          *time.Time
-	To            *time.Time
+	Date          *string
+	From          *string
+	To            *string
 	PaginationKey *string
 }
 
 func (p stockPriceParameter) values() (url.Values, error) {
 	v := url.Values{}
 	if p.Date != nil {
-		v.Add("date", p.Date.Format(time.DateOnly))
+		v.Add("date", *p.Date)
 	} else {
 		if p.Code == nil {
 			return nil, fmt.Errorf("code or date is required")
 		}
 		v.Add("code", *p.Code)
 		if p.From != nil {
-			v.Add("from", p.From.Format(time.DateOnly))
+			v.Add("from", *p.From)
 		}
 		if p.To != nil {
-			v.Add("to", p.To.Format(time.DateOnly))
+			v.Add("to", *p.To)
 		}
 	}
 	if p.PaginationKey != nil {

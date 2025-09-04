@@ -12,7 +12,7 @@ import (
 )
 
 type IndexOptionPrice struct {
-	Date                           time.Time    `json:"Date"`
+	Date                           string       `json:"Date"`
 	Code                           string       `json:"Code"`
 	WholeDayOpen                   *int16       `json:"WholeDayOpen"`
 	WholeDayHigh                   *int16       `json:"WholeDayHigh"`
@@ -34,8 +34,8 @@ type IndexOptionPrice struct {
 	VolumeOnlyAuction              *int64       `json:"Volume(OnlyAuction)"`
 	EmergencyMarginTriggerDivision string       `json:"EmergencyMarginTriggerDivision"`
 	PutCallDivision                int8         `json:"PutCallDivision"`
-	LastTradingDay                 *time.Time   `json:"LastTradingDay"`
-	SpecialQuotationDay            *time.Time   `json:"SpecialQuotationDay"`
+	LastTradingDay                 *string      `json:"LastTradingDay"`
+	SpecialQuotationDay            *string      `json:"SpecialQuotationDay"`
 	SettlementPrice                *int16       `json:"SettlementPrice"`
 	TheoreticalPrice               *json.Number `json:"TheoreticalPrice"`
 	BaseVolatility                 *json.Number `json:"BaseVolatility"`
@@ -159,30 +159,26 @@ func unmarshalJSONNumber(value interface{}) *json.Number {
 	}
 }
 
-func unmarshalTime(value string) *time.Time {
+func unmarshalTime(value string) *string {
 	if value == "" {
 		return nil
 	} else {
-		t, err := time.Parse(time.DateOnly, value)
-		if err != nil {
-			fmt.Printf("failed to decode time error response: %s\n", err)
-		}
-		return &t
+		return &value
 	}
 }
 
 type IndexOptionPriceRequest struct {
-	Date time.Time
+	Date string
 }
 
 type indexOptionPriceParameter struct {
-	Date          time.Time
+	Date          string
 	PaginationKey *string
 }
 
 func (p indexOptionPriceParameter) values() (url.Values, error) {
 	v := url.Values{}
-	v.Add("date", p.Date.Format(time.DateOnly))
+	v.Add("date", p.Date)
 	if p.PaginationKey != nil {
 		v.Add("pagination_key", *p.PaginationKey)
 	}
