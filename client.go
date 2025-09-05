@@ -20,8 +20,8 @@ type Client struct {
 	BaseURL       string
 	MailAddress   string
 	Password      string
-	refreshToken  string
-	idToken       string
+	RefreshToken  string
+	IDToken       string
 	retryInterval time.Duration
 	loopTimeout   time.Duration
 }
@@ -74,10 +74,10 @@ func (c *Client) SendGetRequest(ctx context.Context, u *url.URL) (*http.Response
 	if err != nil {
 		return nil, fmt.Errorf("failed to build request: %w", err)
 	}
-	if c.idToken == "" {
-		panic("idToken is empty")
+	if c.IDToken == "" {
+		panic("ID Token is empty")
 	}
-	req.Header.Set("Authorization", "Bearer "+c.idToken)
+	req.Header.Set("Authorization", "Bearer "+c.IDToken)
 	resp, err := c.HttpClient.Do(req)
 	if err != nil {
 		return nil, err

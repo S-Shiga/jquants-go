@@ -24,7 +24,7 @@ func TestNewClient(t *testing.T) {
 	if err := setup(ctx); err != nil {
 		t.Fatalf("Failed to create client: %v", err)
 	}
-	if testClient.idToken == "" {
+	if testClient.IDToken == "" {
 		t.Error("Empty ID Token")
 	}
 }
