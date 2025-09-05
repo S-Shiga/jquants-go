@@ -244,7 +244,7 @@ func (c *Client) sendStockTradingValueRequest(ctx context.Context, param stockTr
 func (c *Client) StockTradingValue(ctx context.Context, req StockTradingValueRequest) ([]StockTradingValue, error) {
 	var data = make([]StockTradingValue, 0)
 	var paginationKey *string
-	ctx, cancel := context.WithTimeout(ctx, c.loopTimeout)
+	ctx, cancel := context.WithTimeout(ctx, c.LoopTimeout)
 	defer cancel()
 	for {
 		params := stockTradingValueParameters{StockTradingValueRequest: req, PaginationKey: paginationKey}
@@ -252,7 +252,7 @@ func (c *Client) StockTradingValue(ctx context.Context, req StockTradingValueReq
 		if err != nil {
 			if errors.As(err, &InternalServerError{}) {
 				slog.Warn("Retrying HTTP request", "error", err.Error())
-				time.Sleep(c.retryInterval)
+				time.Sleep(c.RetryInterval)
 				continue
 			} else {
 				return nil, fmt.Errorf("failed to send stock trading value request: %w", err)
@@ -370,7 +370,7 @@ func (c *Client) sendMarginTradingVolumeRequest(ctx context.Context, param margi
 func (c *Client) MarginTradingVolume(ctx context.Context, req MarginTradingVolumeRequest) ([]MarginTradingVolume, error) {
 	var data = make([]MarginTradingVolume, 0)
 	var paginationKey *string
-	ctx, cancel := context.WithTimeout(ctx, c.loopTimeout)
+	ctx, cancel := context.WithTimeout(ctx, c.LoopTimeout)
 	defer cancel()
 	for {
 		params := marginTradingVolumeParameters{MarginTradingVolumeRequest: req, PaginationKey: paginationKey}
@@ -378,7 +378,7 @@ func (c *Client) MarginTradingVolume(ctx context.Context, req MarginTradingVolum
 		if err != nil {
 			if errors.As(err, &InternalServerError{}) {
 				slog.Warn("Retrying HTTP request", "error", err.Error())
-				time.Sleep(c.retryInterval)
+				time.Sleep(c.RetryInterval)
 				continue
 			} else {
 				return nil, fmt.Errorf("failed to send margin trading volume request: %w", err)
@@ -481,7 +481,7 @@ func (c *Client) sendShortSellingValueRequest(ctx context.Context, req shortSell
 func (c *Client) ShortSellingValue(ctx context.Context, req ShortSellingValueRequest) ([]ShortSellingValue, error) {
 	var data = make([]ShortSellingValue, 0)
 	var paginationKey *string
-	ctx, cancel := context.WithTimeout(ctx, c.loopTimeout)
+	ctx, cancel := context.WithTimeout(ctx, c.LoopTimeout)
 	defer cancel()
 	for {
 		params := shortSellingValueParameters{ShortSellingValueRequest: req, PaginationKey: paginationKey}
@@ -489,7 +489,7 @@ func (c *Client) ShortSellingValue(ctx context.Context, req ShortSellingValueReq
 		if err != nil {
 			if errors.As(err, &InternalServerError{}) {
 				slog.Warn("Retrying HTTP request", "error", err.Error())
-				time.Sleep(c.retryInterval)
+				time.Sleep(c.RetryInterval)
 				continue
 			} else {
 				return nil, err

@@ -208,7 +208,7 @@ func (c *Client) sendIndexOptionPriceRequest(ctx context.Context, params indexOp
 func (c *Client) IndexOptionPrice(ctx context.Context, req IndexOptionPriceRequest) ([]IndexOptionPrice, error) {
 	var data = make([]IndexOptionPrice, 0)
 	var paginationKey *string
-	ctx, cancel := context.WithTimeout(ctx, c.loopTimeout)
+	ctx, cancel := context.WithTimeout(ctx, c.LoopTimeout)
 	defer cancel()
 	for {
 		param := indexOptionPriceParameters{IndexOptionPriceRequest: req, PaginationKey: paginationKey}
@@ -216,7 +216,7 @@ func (c *Client) IndexOptionPrice(ctx context.Context, req IndexOptionPriceReque
 		if err != nil {
 			if errors.As(err, &InternalServerError{}) {
 				slog.Warn("Retrying HTTP request", "error", err.Error())
-				time.Sleep(c.retryInterval)
+				time.Sleep(c.RetryInterval)
 				continue
 			} else {
 				return nil, err
@@ -233,7 +233,7 @@ func (c *Client) IndexOptionPrice(ctx context.Context, req IndexOptionPriceReque
 
 func (c *Client) IndexOptionPriceWithChannel(ctx context.Context, req IndexOptionPriceRequest, ch chan<- IndexOptionPrice) error {
 	var paginationKey *string
-	ctx, cancel := context.WithTimeout(ctx, c.loopTimeout)
+	ctx, cancel := context.WithTimeout(ctx, c.LoopTimeout)
 	defer cancel()
 	for {
 		param := indexOptionPriceParameters{IndexOptionPriceRequest: req, PaginationKey: paginationKey}
@@ -241,7 +241,7 @@ func (c *Client) IndexOptionPriceWithChannel(ctx context.Context, req IndexOptio
 		if err != nil {
 			if errors.As(err, &InternalServerError{}) {
 				slog.Warn("Retrying HTTP request", "error", err.Error())
-				time.Sleep(c.retryInterval)
+				time.Sleep(c.RetryInterval)
 				continue
 			} else {
 				return err

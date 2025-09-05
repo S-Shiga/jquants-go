@@ -22,8 +22,8 @@ type Client struct {
 	Password      string
 	RefreshToken  string
 	IDToken       string
-	retryInterval time.Duration
-	loopTimeout   time.Duration
+	RetryInterval time.Duration
+	LoopTimeout   time.Duration
 }
 
 func NewClient(ctx context.Context, httpClient *http.Client) (*Client, error) {
@@ -41,8 +41,8 @@ func NewClient(ctx context.Context, httpClient *http.Client) (*Client, error) {
 		BaseURL:       BaseURL,
 		MailAddress:   email,
 		Password:      password,
-		retryInterval: 5 * time.Second,
-		loopTimeout:   20 * time.Second,
+		RetryInterval: 5 * time.Second,
+		LoopTimeout:   20 * time.Second,
 	}
 	refreshToken := os.Getenv("J_QUANTS_REFRESH_TOKEN")
 	if refreshToken == "" {

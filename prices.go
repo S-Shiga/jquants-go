@@ -140,7 +140,7 @@ func (c *Client) sendStockPriceRequest(ctx context.Context, param stockPricePara
 func (c *Client) StockPrice(ctx context.Context, req StockPriceRequest) ([]StockPrice, error) {
 	var data = make([]StockPrice, 0)
 	var paginationKey *string
-	ctx, cancel := context.WithTimeout(ctx, c.loopTimeout)
+	ctx, cancel := context.WithTimeout(ctx, c.LoopTimeout)
 	defer cancel()
 	for {
 		params := stockPriceParameters{req, paginationKey}
@@ -148,7 +148,7 @@ func (c *Client) StockPrice(ctx context.Context, req StockPriceRequest) ([]Stock
 		if err != nil {
 			if errors.As(err, &InternalServerError{}) {
 				slog.Warn("Retrying HTTP request", "error", err.Error())
-				time.Sleep(c.retryInterval)
+				time.Sleep(c.RetryInterval)
 				continue
 			} else {
 				return nil, fmt.Errorf("failed to send stock price request: %w", err)
@@ -165,7 +165,7 @@ func (c *Client) StockPrice(ctx context.Context, req StockPriceRequest) ([]Stock
 
 func (c *Client) StockPriceWithChannel(ctx context.Context, req StockPriceRequest, ch chan<- StockPrice) error {
 	var paginationKey *string
-	ctx, cancel := context.WithTimeout(ctx, c.loopTimeout)
+	ctx, cancel := context.WithTimeout(ctx, c.LoopTimeout)
 	defer cancel()
 	for {
 		params := stockPriceParameters{StockPriceRequest: req, PaginationKey: paginationKey}
@@ -173,7 +173,7 @@ func (c *Client) StockPriceWithChannel(ctx context.Context, req StockPriceReques
 		if err != nil {
 			if errors.As(err, &InternalServerError{}) {
 				slog.Warn("Retrying HTTP request", "error", err.Error())
-				time.Sleep(c.retryInterval)
+				time.Sleep(c.RetryInterval)
 				continue
 			} else {
 				return fmt.Errorf("failed to send stock price request: %w", err)
