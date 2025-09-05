@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-const baseURL = "https://api.jquants.com/v1"
+const BaseURL = "https://api.jquants.com/v1"
 
 type Client struct {
 	HttpClient    *http.Client
@@ -38,7 +38,7 @@ func NewClient(ctx context.Context, httpClient *http.Client) (*Client, error) {
 	}
 	client := &Client{
 		HttpClient:    httpClient,
-		BaseURL:       baseURL,
+		BaseURL:       BaseURL,
 		MailAddress:   email,
 		Password:      password,
 		retryInterval: 5 * time.Second,
@@ -69,7 +69,7 @@ func (c *Client) sendPostRequest(ctx context.Context, u *url.URL, body io.Reader
 	return resp, nil
 }
 
-func (c *Client) sendGetRequest(ctx context.Context, u *url.URL) (*http.Response, error) {
+func (c *Client) SendGetRequest(ctx context.Context, u *url.URL) (*http.Response, error) {
 	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to build request: %w", err)
@@ -99,7 +99,7 @@ func (c *Client) sendRequest(ctx context.Context, urlPath string, param paramete
 		panic(err)
 	}
 	u.RawQuery = v.Encode()
-	return c.sendGetRequest(ctx, u)
+	return c.SendGetRequest(ctx, u)
 }
 
 type BadRequest struct {
